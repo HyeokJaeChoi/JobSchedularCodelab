@@ -20,6 +20,10 @@
             android:name=".NotificationJobService"
             android:permission="android.permission.BIND_JOB_SERVICE"
             />
+        <service
+            android:name=".AsyncTaskJobService"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            />
     </application>
 
 </manifest>

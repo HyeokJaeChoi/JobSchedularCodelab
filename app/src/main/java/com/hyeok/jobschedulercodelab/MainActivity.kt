@@ -73,7 +73,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         }
         val seekBarProgress = seekBar.progress
         val seekBarSet = seekBarProgress > 0
-        val componentName = ComponentName(packageName, NotificationJobService::class.java.name)
+        val componentName = ComponentName(packageName, AsyncTaskJobService::class.java.name)
         val jobInfoBuilder = JobInfo.Builder(JOB_ID, componentName)
             .setRequiredNetworkType(selectedNetworkOption)
             .setRequiresDeviceIdle(idleSwitch.isChecked)
