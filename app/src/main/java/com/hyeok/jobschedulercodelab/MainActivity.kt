@@ -55,7 +55,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         val componentName = ComponentName(packageName, NotificationJobService::class.java.name)
         val jobInfoBuilder = JobInfo.Builder(JOB_ID, componentName)
             .setRequiredNetworkType(selectedNetworkOption)
-        val constraintSet = selectedNetworkOption != JobInfo.NETWORK_TYPE_NONE
+            .setRequiresDeviceIdle(idleSwitch.isChecked)
+            .setRequiresCharging(chargingSwitch.isChecked)
+        val constraintSet = (selectedNetworkOption != JobInfo.NETWORK_TYPE_NONE)
+                || chargingSwitch.isChecked || idleSwitch.isChecked
 
         if(constraintSet) {
             val jobInfo = jobInfoBuilder.build()
