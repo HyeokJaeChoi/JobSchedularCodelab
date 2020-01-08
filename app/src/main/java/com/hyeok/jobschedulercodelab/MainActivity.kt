@@ -6,6 +6,7 @@ import android.content.ComponentName
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.SeekBar
 import android.widget.Toast
 import androidx.core.content.getSystemService
 import kotlinx.android.synthetic.main.activity_main.*
@@ -21,6 +22,24 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
         scheduleJobBtn.setOnClickListener(this)
         cancelJobBtn.setOnClickListener(this)
+        seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
+                if(p1 > 0) {
+                    seekBarProgress.text = "$p1 s"
+                }
+                else {
+                    seekBarProgress.text = "Not Set"
+                }
+            }
+
+            override fun onStartTrackingTouch(p0: SeekBar?) {
+
+            }
+
+            override fun onStopTrackingTouch(p0: SeekBar?) {
+
+            }
+        })
     }
 
     override fun onClick(p0: View?) {
@@ -52,13 +71,19 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 JobInfo.NETWORK_TYPE_NONE
             }
         }
+        val seekBarProgress = seekBar.progress
+        val seekBarSet = seekBarProgress > 0
         val componentName = ComponentName(packageName, NotificationJobService::class.java.name)
         val jobInfoBuilder = JobInfo.Builder(JOB_ID, componentName)
             .setRequiredNetworkType(selectedNetworkOption)
             .setRequiresDeviceIdle(idleSwitch.isChecked)
             .setRequiresCharging(chargingSwitch.isChecked)
+
+        if(seekBarSet) {
+            jobInfoBuilder.setOverrideDeadline((seekBarProgress * 1000).toLong())
+        }
         val constraintSet = (selectedNetworkOption != JobInfo.NETWORK_TYPE_NONE)
-                || chargingSwitch.isChecked || idleSwitch.isChecked
+                || chargingSwitch.isChecked || idleSwitch.isChecked || seekBarSet
 
         if(constraintSet) {
             val jobInfo = jobInfoBuilder.build()
